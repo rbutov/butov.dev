@@ -15,10 +15,6 @@ export default function HomePage() {
             ,
           </div>
           <div className="whitespace-nowrap">
-            <span className="text-[#c87dba] ml-5">age</span>:
-            <span className="text-[#6aab73]"> &apos;34&apos;</span>,
-          </div>
-          <div className="whitespace-nowrap">
             <span className="text-[#c87dba] ml-5">location</span>:
             <span className="text-[#6aab73]"> &apos;San Jose, CA&apos;</span>,
           </div>
