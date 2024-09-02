@@ -1,13 +1,13 @@
 export default function HomePage() {
   return (
-    <main className="bg-[#1e1f22] min-h-screen flex items-center justify-center text-[13px]">
+    <main className="flex min-h-screen items-center justify-center bg-[#1e1f22] text-[13px]">
       <pre className="whitespace-pre-wrap text-[#bcbec4]">
         <code>
           <span className="text-[#ce8e6d]">export const</span>
           <span className="text-[#c87dba]"> webDeveloper </span>
           {'= {'}
           <div className="whitespace-nowrap">
-            <span className="text-[#c87dba] ml-5">name</span>:
+            <span className="ml-5 text-[#c87dba]">name</span>:
             <span className="text-[#6aab73]">
               {' '}
               &apos;Ruslan <span className="underline decoration-wavy">Butov</span>&apos;
@@ -15,15 +15,15 @@ export default function HomePage() {
             ,
           </div>
           <div className="whitespace-nowrap">
-            <span className="text-[#c87dba] ml-5">location</span>:
+            <span className="ml-5 text-[#c87dba]">location</span>:
             <span className="text-[#6aab73]"> &apos;San Jose, CA&apos;</span>,
           </div>
           <div>
-            <span className="text-[#c87dba] ml-5">position</span>:
+            <span className="ml-5 text-[#c87dba]">position</span>:
             <span className="text-[#6aab73]"> &apos;Senior Software Engineer&apos;</span>,
           </div>
           <div className="whitespace-nowrap">
-            <span className="text-[#c87dba] ml-5">github</span>:
+            <span className="ml-5 text-[#c87dba]">github</span>:
             <span className="text-[#6aab73]">
               {' '}
               &apos;
@@ -35,7 +35,7 @@ export default function HomePage() {
             ,
           </div>
           <div className="whitespace-nowrap">
-            <span className="text-[#c87dba] ml-5">linkedin</span>:
+            <span className="ml-5 text-[#c87dba]">linkedin</span>:
             <span className="text-[#6aab73]">
               {' '}
               &apos;
