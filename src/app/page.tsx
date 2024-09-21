@@ -20,11 +20,6 @@ export default function HomePage() {
               <div className="h-3 w-3 rounded-full bg-[#787979]"></div>
               <div className="ml-2 text-xs font-medium"></div>
             </div>
-            <div className="flex items-center space-x-2">
-              <div className="h-4 w-4 animate-pulse rounded-sm bg-[#787979]"></div>
-              <div className="h-4 w-4 animate-pulse rounded-sm bg-[#787979] delay-150"></div>
-              <div className="h-4 w-4 animate-pulse rounded-sm bg-[#787979] delay-300"></div>
-            </div>
           </div>
         </div>
         <div className="p-6">
