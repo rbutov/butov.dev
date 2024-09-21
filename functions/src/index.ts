@@ -31,9 +31,16 @@ export const checkAppleProductAvailability = onSchedule('* * * * *', async () =>
       );
     } else {
       logger.info(`Product ${params.product} is not available.`);
-      const currentHour = new Date().getHours();
+      const currentDate = new Date();
+      const pstDate = new Date(
+        currentDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
+      );
+      const currentHour = pstDate.getHours();
       if (currentHour === 10 || currentHour === 21) {
-        await sendTelegramNotification(`Product ${params.product} is not available.`);
+        const currentMinute = pstDate.getMinutes();
+        if (currentMinute === 0) {
+          await sendTelegramNotification(`Product ${params.product} is not available.`);
+        }
       }
     }
   } catch (error) {

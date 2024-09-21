@@ -58,7 +58,10 @@ export default function HomePage() {
                 ,
               </div>
             ))}
-            {'}'}
+            <span className="relative">
+              <span className="animate-blink absolute left-0 top-[-1px] h-4 w-[0.6em] bg-[#ced0d6]"></span>
+              <span className="animate-blinkReverse color-white relative">{'}'}</span>
+            </span>
           </code>
         </div>
       </pre>
