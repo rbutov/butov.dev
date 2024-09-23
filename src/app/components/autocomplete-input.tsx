@@ -1,4 +1,4 @@
-import React, { useState, type FC, type ChangeEvent } from 'react';
+import React, { type ChangeEvent, type FC, useState } from 'react';
 
 interface AutocompleteInputProps {
   type: 'google' | 'yandex';

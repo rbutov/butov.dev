@@ -1,9 +1,9 @@
-import { type FC } from 'react';
 import Link from 'next/link';
+import { type FC } from 'react';
 
 const NotFound: FC = () => {
   return (
-    <div className="flex w-96 flex-col items-center justify-center bg-[#1e1f22] font-mono text-[#bcbec4]">
+    <div className="flex w-96 max-w-full flex-col items-center justify-center bg-[#1e1f22] font-mono text-[#bcbec4]">
       <h1 className="mb-4 text-6xl font-bold">404</h1>
       <p className="mb-8 text-xl">Page not found</p>
       <Link

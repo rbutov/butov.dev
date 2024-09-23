@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef, type FC, useCallback } from 'react';
 import { useThrottle } from '@uidotdev/usehooks';
+import { type FC, useCallback, useEffect, useRef, useState } from 'react';
+
 import { AutocompleteInput } from '../components/autocomplete-input';
 import { fetchSuggestions } from './utils';
 
