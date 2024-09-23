@@ -1,8 +1,7 @@
 import axios from 'axios';
 import * as logger from 'firebase-functions/logger';
-import { config } from 'firebase-functions';
 
-const TELEGRAM_BOT_TOKEN = config().telegram.bot_token;
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 
 export async function getTelegramChats(): Promise<any> {
   if (!TELEGRAM_BOT_TOKEN) {

@@ -36,7 +36,7 @@ export const checkAppleProductAvailability = onSchedule('* * * * *', async () =>
         currentDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
       );
       const currentHour = pstDate.getHours();
-      if (currentHour === 10 || currentHour === 21) {
+      if (currentHour === 11 || currentHour === 21) {
         const currentMinute = pstDate.getMinutes();
         if (currentMinute === 0) {
           await sendTelegramNotification(`Product ${params.product} is not available.`);
