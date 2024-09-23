@@ -16,18 +16,25 @@ const Autocomplete: FC = () => {
 
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const handleFetchSuggestions = useCallback(async (value: string, type: 'google' | 'yandex') => {
-    abortControllerRef.current?.abort('new request');
-    abortControllerRef.current = new AbortController();
+  const handleFetchSuggestions = useCallback(
+    async (value: string, type: 'google' | 'yandex') => {
+      abortControllerRef.current?.abort('new request');
+      abortControllerRef.current = new AbortController();
 
-    const suggestions = await fetchSuggestions(value, type, abortControllerRef.current.signal);
-    
-    if (type === 'google') {
-      setGoogleSuggestions(suggestions);
-    } else {
-      setYandexSuggestions(suggestions);
-    }
-  }, []);
+      const suggestions = await fetchSuggestions(
+        value,
+        type,
+        abortControllerRef.current.signal
+      );
+
+      if (type === 'google') {
+        setGoogleSuggestions(suggestions);
+      } else {
+        setYandexSuggestions(suggestions);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     if (throttledGoogleValue) {

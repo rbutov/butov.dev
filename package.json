@@ -6,7 +6,8 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.4.0",

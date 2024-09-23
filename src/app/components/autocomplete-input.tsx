@@ -15,7 +15,8 @@ const AutocompleteInput: FC<AutocompleteInputProps> = ({
   suggestions,
   setSuggestions,
 }) => {
-  const [isSuggestionSelected, setIsSuggestionSelected] = useState<boolean>(false);
+  const [isSuggestionSelected, setIsSuggestionSelected] =
+    useState<boolean>(false);
   const [isActive, setIsActive] = useState<boolean>(false);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +32,7 @@ const AutocompleteInput: FC<AutocompleteInputProps> = ({
   };
 
   return (
-    <div className="relative w-96 max-w-full mb-4">
+    <div className="relative mb-4 w-96 max-w-full">
       <input
         type="text"
         value={inputValue}

@@ -1,8 +1,15 @@
 import type { ResponseData } from '~/app/api/autocomplete/route';
 
-export const fetchSuggestions = async (value: string, type: 'google' | 'yandex', signal: AbortSignal): Promise<string[]> => {
+export const fetchSuggestions = async (
+  value: string,
+  type: 'google' | 'yandex',
+  signal: AbortSignal
+): Promise<string[]> => {
   try {
-    const response = await fetch(`/api/autocomplete?input=${encodeURIComponent(value)}&type=${type}`, { signal });
+    const response = await fetch(
+      `/api/autocomplete?input=${encodeURIComponent(value)}&type=${type}`,
+      { signal }
+    );
 
     if (response.ok) {
       const data = (await response.json()) as ResponseData;

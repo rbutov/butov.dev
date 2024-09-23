@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className={`overflow-hidden font-sans ${inter.variable}`}>
         <main className="flex min-h-screen items-center justify-center bg-[#3c3c3c] font-mono text-[11px] sm:text-[13px]">
-          <pre className="whitespace-pre-wrap rounded-lg bg-[#1e1f22] text-[#bcbec4] shadow-lg max-w-[90%]">
+          <pre className="max-w-[90%] whitespace-pre-wrap rounded-lg bg-[#1e1f22] text-[#bcbec4] shadow-lg">
             <div className="relative w-full">
               <div className="flex h-8 items-center justify-between rounded-t-lg bg-[#2b2d30] px-2 text-[#bbbbbb]">
                 <div className="flex items-center space-x-2">

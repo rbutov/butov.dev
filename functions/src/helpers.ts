@@ -51,7 +51,10 @@ export async function sendTelegramNotification(message: string): Promise<void> {
       await axios.post(url, data);
       logger.info(`Telegram notification sent successfully to chat ${chatId}`);
     } catch (error) {
-      logger.error(`Error sending Telegram notification to chat ${chatId}:`, error);
+      logger.error(
+        `Error sending Telegram notification to chat ${chatId}:`,
+        error
+      );
     }
   }
 }
