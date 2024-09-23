@@ -1,29 +1,28 @@
-# Firebase Functions Deployment Setup for Telegram Bot
+# Firebase Functions for butov.dev
 
-This README provides instructions on how to set up the Telegram bot token in Firebase config before deploying your Firebase Functions project.
+This directory contains the Firebase Functions for the butov.dev project.
 
-## Setting the Telegram Bot Token
+## Environment Setup
 
-Before deploying your Firebase Functions, you need to set the Telegram bot token in your Firebase config. Follow these steps:
+Before running the functions, you need to set up your environment:
 
-1. Open your terminal or command prompt.
-
-2. Use the Firebase CLI to set the Telegram bot token as an environment variable:
+1. Rename the `.env.example` file to `.env`:
 
    ```
-   firebase functions:config:set telegram.bot_token="YOUR_BOT_TOKEN_HERE"
+   cp .env.example .env
    ```
 
-   Replace "YOUR_BOT_TOKEN_HERE" with your actual Telegram bot token.
-
-3. Verify that the token has been set correctly:
+2. Open the `.env` file and set the `TELEGRAM_BOT_TOKEN` value:
 
    ```
-   firebase functions:config:get
+   TELEGRAM_BOT_TOKEN="your-telegram-bot-token"
    ```
 
-   This should display your current configuration, including the telegram.bot_token.
+   Replace `"your-telegram-bot-token"` with the actual token you received from the BotFather on Telegram.
 
-## Accessing the Bot Token in Your Code
+## Important Notes
 
-Once you've set the bot token in your Firebase config, you can access it in your code like this:
+- Keep your `.env` file secure and never commit it to version control.
+- The `TELEGRAM_BOT_TOKEN` is crucial for the bot's functionality. Make sure it's correctly set before deploying or testing the functions.
+
+For more information on setting up and using Firebase Functions, refer to the [Firebase documentation](https://firebase.google.com/docs/functions).
