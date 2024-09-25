@@ -1,11 +1,16 @@
 import React, { type ChangeEvent, type FC, useState } from 'react';
 
+interface Suggestion {
+  text: string;
+  distance?: number | null;
+}
+
 interface AutocompleteInputProps {
   type: 'google' | 'yandex';
   inputValue: string;
   setInputValue: (value: string) => void;
-  suggestions: string[];
-  setSuggestions: (suggestions: string[]) => void;
+  suggestions: Suggestion[];
+  setSuggestions: (suggestions: Suggestion[]) => void;
 }
 
 const AutocompleteInput: FC<AutocompleteInputProps> = ({
@@ -18,16 +23,21 @@ const AutocompleteInput: FC<AutocompleteInputProps> = ({
   const [isSuggestionSelected, setIsSuggestionSelected] =
     useState<boolean>(false);
   const [isActive, setIsActive] = useState<boolean>(false);
+  const [selectedDistance, setSelectedDistance] = useState<number | null>(null);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setIsSuggestionSelected(false);
+    setSelectedDistance(null);
     setInputValue(value);
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
+  const handleSuggestionClick = (suggestion: Suggestion) => {
     setIsSuggestionSelected(true);
-    setInputValue(suggestion);
+    setInputValue(suggestion.text);
+    if (type === 'yandex') {
+      setSelectedDistance(suggestion.distance ?? null);
+    }
     setSuggestions([]);
   };
 
@@ -50,13 +60,21 @@ const AutocompleteInput: FC<AutocompleteInputProps> = ({
               className="cursor-pointer px-4 py-2 text-[#dfe1e5] hover:bg-[#393b40]"
               onClick={() => handleSuggestionClick(suggestion)}
             >
-              {index === 0 ? `Выбрать "${suggestion}"` : suggestion}
+              <div>{suggestion.text}</div>
             </li>
           ))}
         </ul>
       )}
+      {type === 'yandex' &&
+        isSuggestionSelected &&
+        selectedDistance !== null && (
+          <div className="mt-2 text-sm text-[#9da0a8]">
+            Расстояние: {(selectedDistance / 1000).toFixed(2)} км
+          </div>
+        )}
     </div>
   );
 };
 
 export { AutocompleteInput };
+export type { Suggestion };

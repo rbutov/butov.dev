@@ -4,6 +4,7 @@ import {
 } from '@googlemaps/google-maps-services-js';
 import axios from 'axios';
 import { type NextRequest } from 'next/server';
+import { type Suggestion } from '~/app/components/autocomplete-input';
 
 const axiosInstance = axios.create({
   baseURL: 'https://maps.googleapis.com/maps/api',
@@ -14,7 +15,7 @@ const axiosInstance = axios.create({
 });
 const client = new Client({ axiosInstance });
 
-export type ResponseData = string[] | { error: string };
+export type ResponseData = Suggestion[] | { error: string };
 
 export async function GET(request: NextRequest) {
   try {
@@ -37,8 +38,8 @@ export async function GET(request: NextRequest) {
             text: input,
             lang: 'ru_RU',
             types: 'house',
-            ll: '27.561831,53.902284', // Coordinates for Minsk
-            spn: '0.3,0.3', // Approximate span for Minsk
+            ll: '27.518791325127733,53.90891092143379', // Coordinates for Minsk
+            spn: '1.5,1.5', // Approximate span for Minsk region
             results: 5,
           },
         }
@@ -46,7 +47,10 @@ export async function GET(request: NextRequest) {
 
       if (yandexResponse.data.results) {
         const yandexSuggestions = yandexResponse.data.results.map(
-          (result: any) => result.title.text
+          (result: any) => ({
+            text: `${result.title.text}, ${result.subtitle.text}`,
+            distance: result.distance?.value || null,
+          })
         );
         return Response.json(yandexSuggestions);
       }
@@ -66,7 +70,9 @@ export async function GET(request: NextRequest) {
 
       if (googleResponse.data.predictions) {
         const googleSuggestions = googleResponse.data.predictions.map(
-          (prediction) => prediction.description
+          (prediction) => ({
+            text: prediction.description,
+          })
         );
         return Response.json(googleSuggestions);
       }

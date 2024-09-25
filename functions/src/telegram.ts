@@ -14,6 +14,7 @@ interface SubscriberData {
   chatId: number;
   productId: string;
   zipCode: string;
+  distance: number;
   isSubscribed: boolean;
   timestamp: FirebaseFirestore.Timestamp;
 }
@@ -102,17 +103,18 @@ export const telegramWebhook = https.onRequest(
           if (subscriberDoc.exists && subscriberDoc.data()?.isSubscribed) {
             // User is subscribed, send current subscription details
             const subscriberData = subscriberDoc.data() as SubscriberData;
-            const { productId, zipCode } = subscriberData;
+            const { productId, zipCode, distance } = subscriberData;
             await sendTelegramMessage(
               chatId,
-              `You are currently subscribed.\nProduct ID: ${productId}\nZIP Code: ${zipCode}`
+              `You are currently subscribed.\nProduct ID: ${productId}\nZIP Code: ${zipCode}\nDistance: ${distance} miles`
             );
 
             // Check product availability immediately
             await checkProductAvailabilityByZipCode(
+              chatId,
               productId,
               zipCode,
-              chatId,
+              distance,
               true
             );
           } else {
@@ -123,14 +125,14 @@ export const telegramWebhook = https.onRequest(
             );
           }
         } else {
-          // Handle product ID or ZIP code input
+          // Handle product ID, ZIP code, or distance input
           const subscriberRef = db
             .collection('subscribers')
             .doc(String(chatId));
           const subscriberDoc = await subscriberRef.get();
 
-          if (!subscriberDoc.exists || subscriberDoc.data()?.isSubscribed) {
-            // Handle product ID input
+          if (!subscriberDoc.exists) {
+            // New subscriber, handle product ID input
             if (userMessage.match(/^[A-Z0-9]+\/[A-Z]$/)) {
               // Save product ID and prompt for ZIP code
               await subscriberRef.set(
@@ -153,35 +155,78 @@ export const telegramWebhook = https.onRequest(
                 'Invalid product ID. Please enter a valid product ID.'
               );
             }
-          } else if (!subscriberDoc.data()?.isSubscribed) {
-            // Handle ZIP code input
-            if (userMessage.match(/^\d{5}$/)) {
-              // Complete subscription process
-              await subscriberRef.update({
-                zipCode: userMessage,
-                isSubscribed: true,
-              });
-              await sendTelegramMessage(
-                chatId,
-                'You have successfully subscribed to updates!'
-              );
+          } else {
+            const subscriberData = subscriberDoc.data() as SubscriberData;
 
-              // Check product availability immediately
-              const subscriberData = subscriberDoc.data() as SubscriberData;
-              const { productId, zipCode } = subscriberData;
+            if (subscriberData.isSubscribed) {
+              // User is already subscribed, start resubscription process
+              if (userMessage.match(/^[A-Z0-9]+\/[A-Z]$/)) {
+                await subscriberRef.update({
+                  productId: userMessage,
+                  zipCode: null,
+                  distance: null,
+                  isSubscribed: false,
+                });
+                await sendTelegramMessage(
+                  chatId,
+                  `Product ID ${userMessage} saved for resubscription. Now, please enter your ZIP code:`
+                );
+              } else {
+                // Invalid product ID for resubscription
+                await sendTelegramMessage(
+                  chatId,
+                  'Invalid product ID. Please enter a valid product ID to resubscribe.'
+                );
+              }
+            } else if (!subscriberData.zipCode) {
+              // Handle ZIP code input
+              if (userMessage.match(/^\d{5}$/)) {
+                // Save ZIP code and prompt for distance
+                await subscriberRef.update({
+                  zipCode: userMessage,
+                });
+                await sendTelegramMessage(
+                  chatId,
+                  'ZIP code saved. Now, please enter the distance in miles (e.g., 10):'
+                );
+              } else {
+                // Invalid ZIP code
+                await sendTelegramMessage(
+                  chatId,
+                  'Invalid ZIP code. Please enter a valid 5-digit ZIP code.'
+                );
+              }
+            } else if (!subscriberData.isSubscribed) {
+              // Handle distance input
+              const distance = parseInt(userMessage);
+              if (!isNaN(distance) && distance > 0) {
+                // Complete subscription process
+                await subscriberRef.update({
+                  distance: distance,
+                  isSubscribed: true,
+                });
+                await sendTelegramMessage(
+                  chatId,
+                  'You have successfully subscribed to updates!'
+                );
 
-              await checkProductAvailabilityByZipCode(
-                productId,
-                zipCode,
-                chatId,
-                true
-              );
-            } else {
-              // Invalid ZIP code
-              await sendTelegramMessage(
-                chatId,
-                'Invalid ZIP code. Please enter a valid 5-digit ZIP code.'
-              );
+                // Check product availability immediately
+                const { productId, zipCode } = subscriberData;
+
+                await checkProductAvailabilityByZipCode(
+                  chatId,
+                  productId,
+                  zipCode,
+                  distance,
+                  true
+                );
+              } else {
+                // Invalid distance
+                await sendTelegramMessage(
+                  chatId,
+                  'Invalid distance. Please enter a positive number in miles.'
+                );
+              }
             }
           }
         }

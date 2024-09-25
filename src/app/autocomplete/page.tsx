@@ -3,14 +3,17 @@
 import { useThrottle } from '@uidotdev/usehooks';
 import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 
-import { AutocompleteInput } from '../components/autocomplete-input';
+import {
+  AutocompleteInput,
+  type Suggestion,
+} from '../components/autocomplete-input';
 import { fetchSuggestions } from './utils';
 
 const Autocomplete: FC = () => {
   const [googleInputValue, setGoogleInputValue] = useState<string>('');
   const [yandexInputValue, setYandexInputValue] = useState<string>('');
-  const [googleSuggestions, setGoogleSuggestions] = useState<string[]>([]);
-  const [yandexSuggestions, setYandexSuggestions] = useState<string[]>([]);
+  const [googleSuggestions, setGoogleSuggestions] = useState<Suggestion[]>([]);
+  const [yandexSuggestions, setYandexSuggestions] = useState<Suggestion[]>([]);
 
   const throttledGoogleValue = useThrottle(googleInputValue, 300);
   const throttledYandexValue = useThrottle(yandexInputValue, 300);

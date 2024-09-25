@@ -117,8 +117,14 @@ export async function checkAppleProductAvailability(): Promise<void> {
       const productId = subscriber.productId;
       const zipCode = subscriber.zipCode;
       const chatId = subscriber.chatId;
+      const distance = subscriber.distance;
 
-      await checkProductAvailabilityByZipCode(productId, zipCode, chatId);
+      await checkProductAvailabilityByZipCode(
+        chatId,
+        productId,
+        zipCode,
+        distance
+      );
     }
   } catch (error) {
     logger.error('Error checking product availability:', error);
@@ -130,12 +136,14 @@ export async function checkAppleProductAvailability(): Promise<void> {
  * @param {string} productId - The ID of the product to check
  * @param {string} zipCode - The ZIP code to check availability in
  * @param {string} chatId - The chat ID to send notifications to
+ * @param {number} distance - The distance in miles to check for availability
  * @param {boolean} force - Whether to force send a notification regardless of time
  */
 export async function checkProductAvailabilityByZipCode(
+  chatId: string,
   productId: string,
   zipCode: string,
-  chatId: string,
+  distance = 50,
   force = false
 ): Promise<void> {
   const url = 'https://www.apple.com/shop/fulfillment-messages';
@@ -152,16 +160,17 @@ export async function checkProductAvailabilityByZipCode(
     const response = await axios.get(url, { params });
     const data = response.data;
 
-    // Check if the product exists in the response
+    // Check if the product exists in the response and filter by distance
     const availableStores = data.body?.content?.pickupMessage?.stores?.filter(
       (store: any) =>
         productId in store.partsAvailability &&
-        store.partsAvailability[productId]?.buyability?.isBuyable
+        store.partsAvailability[productId]?.buyability?.isBuyable &&
+        parseFloat(store.storedistance) <= distance
     );
 
     if (availableStores && availableStores.length > 0) {
       logger.info(
-        `Product ${productId} is available for subscriber with chat ID ${chatId}.`
+        `Product ${productId} is available within ${distance} miles for subscriber with chat ID ${chatId}.`
       );
       // Send notification to the current subscriber
       const storeInfo = availableStores
@@ -174,11 +183,11 @@ export async function checkProductAvailabilityByZipCode(
 
       await sendTelegramMessage(
         chatId,
-        `Product ${productId} is now available in ${availableStores.length} stores near you! Closest stores: ${storeInfo}`
+        `Product ${productId} is now available in ${availableStores.length} stores within ${distance} miles of you! Closest stores: ${storeInfo}`
       );
     } else {
       logger.info(
-        `Product ${productId} is not available for subscriber with chat ID ${chatId}.`
+        `Product ${productId} is not available within ${distance} miles for subscriber with chat ID ${chatId}.`
       );
       const currentDate = new Date();
       const pstDate = new Date(
@@ -195,7 +204,7 @@ export async function checkProductAvailabilityByZipCode(
           // Send notification to the current subscriber
           await sendTelegramMessage(
             chatId,
-            `Product ${productId} is not available.`
+            `Product ${productId} is not available within ${distance} miles of your location.`
           );
         }
       }

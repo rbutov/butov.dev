@@ -1,10 +1,12 @@
 import type { ResponseData } from '~/app/api/autocomplete/route';
 
+import { type Suggestion } from '../components/autocomplete-input';
+
 export const fetchSuggestions = async (
   value: string,
   type: 'google' | 'yandex',
   signal: AbortSignal
-): Promise<string[]> => {
+): Promise<Suggestion[]> => {
   try {
     const response = await fetch(
       `/api/autocomplete?input=${encodeURIComponent(value)}&type=${type}`,
@@ -15,10 +17,10 @@ export const fetchSuggestions = async (
       const data = (await response.json()) as ResponseData;
 
       if (Array.isArray(data)) {
-        return [value, ...data];
+        return data;
       } else {
         console.error('Error:', data.error);
-        return [value];
+        return [];
       }
     } else {
       throw new Error('Failed to fetch suggestions');
@@ -29,6 +31,6 @@ export const fetchSuggestions = async (
     } else {
       console.error('Error fetching autocomplete suggestions:', error);
     }
-    return [value];
+    return [{ text: value }];
   }
 };
