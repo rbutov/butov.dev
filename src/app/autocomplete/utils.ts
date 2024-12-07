@@ -2,6 +2,30 @@ import type { ResponseData } from '~/app/api/autocomplete/route';
 
 import { type Suggestion } from '../components/autocomplete-input';
 
+export type Geocode = {
+  latitude: number;
+  longitude: number;
+};
+
+export const getGeocode = async (address: string): Promise<Geocode | null> => {
+  try {
+    const response = await fetch(
+      `/api/autocomplete?input=${encodeURIComponent(address)}&type=geocode`
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      if ('latitude' in data && 'longitude' in data) {
+        return { latitude: data.latitude, longitude: data.longitude };
+      }
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching geocode:', error);
+    return null;
+  }
+};
+
 export const fetchSuggestions = async (
   value: string,
   type: 'google' | 'yandex',

@@ -11,6 +11,7 @@ interface AutocompleteInputProps {
   setInputValue: (value: string) => void;
   suggestions: Suggestion[];
   setSuggestions: (suggestions: Suggestion[]) => void;
+  setSelected: (selected: string) => void;
 }
 
 const AutocompleteInput: FC<AutocompleteInputProps> = ({
@@ -19,6 +20,7 @@ const AutocompleteInput: FC<AutocompleteInputProps> = ({
   setInputValue,
   suggestions,
   setSuggestions,
+  setSelected,
 }) => {
   const [isSuggestionSelected, setIsSuggestionSelected] =
     useState<boolean>(false);
@@ -37,6 +39,7 @@ const AutocompleteInput: FC<AutocompleteInputProps> = ({
     setInputValue(suggestion.text);
     if (type === 'yandex') {
       setSelectedDistance(suggestion.distance ?? null);
+      setSelected(suggestion.text);
     }
     setSuggestions([]);
   };

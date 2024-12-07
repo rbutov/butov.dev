@@ -54,6 +54,27 @@ export async function GET(request: NextRequest) {
         );
         return Response.json(yandexSuggestions);
       }
+    } else if (type === 'geocode') {
+      const geocodeResponse = await axios.get(
+        'https://geocode-maps.yandex.ru/1.x/',
+        {
+          params: {
+            apikey: process.env.YANDEX_GEOCODE_API_KEY,
+            format: 'json',
+            geocode: input,
+          },
+        }
+      );
+
+      const featureMember =
+        geocodeResponse.data.response.GeoObjectCollection.featureMember[0];
+      if (featureMember) {
+        const [longitude, latitude] = featureMember.GeoObject.Point.pos
+          .split(' ')
+          .map(parseFloat);
+        return Response.json({ latitude, longitude });
+      }
+      return Response.json({ error: 'No geocode found' }, { status: 404 });
     } else {
       const googleResponse = await client.placeAutocomplete({
         params: {

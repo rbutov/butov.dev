@@ -7,13 +7,17 @@ import {
   AutocompleteInput,
   type Suggestion,
 } from '../components/autocomplete-input';
-import { fetchSuggestions } from './utils';
+import { YandexMapWithZones } from '../components/yandex-map';
+import { type Geocode, fetchSuggestions, getGeocode } from './utils';
 
 const Autocomplete: FC = () => {
   const [googleInputValue, setGoogleInputValue] = useState<string>('');
   const [yandexInputValue, setYandexInputValue] = useState<string>('');
   const [googleSuggestions, setGoogleSuggestions] = useState<Suggestion[]>([]);
   const [yandexSuggestions, setYandexSuggestions] = useState<Suggestion[]>([]);
+  const [selectedGeocode, setSelectedGeocode] = useState<Geocode | null>(null);
+
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
 
   const throttledGoogleValue = useThrottle(googleInputValue, 300);
   const throttledYandexValue = useThrottle(yandexInputValue, 300);
@@ -56,21 +60,37 @@ const Autocomplete: FC = () => {
     }
   }, [throttledYandexValue, handleFetchSuggestions]);
 
+  useEffect(() => {
+    if (selectedAddress) {
+      getGeocode(selectedAddress).then((geocode) => {
+        if (geocode) {
+          setSelectedGeocode(geocode);
+        }
+      });
+    }
+  }, [selectedAddress]);
+
   return (
     <div className="bg-[#1e1f22] p-4">
-      <AutocompleteInput
+      {/* <AutocompleteInput
         type="google"
         inputValue={googleInputValue}
         setInputValue={setGoogleInputValue}
         suggestions={googleSuggestions}
         setSuggestions={setGoogleSuggestions}
-      />
+        setSelected={setSelectedAddress}
+      /> */}
       <AutocompleteInput
         type="yandex"
         inputValue={yandexInputValue}
         setInputValue={setYandexInputValue}
         suggestions={yandexSuggestions}
         setSuggestions={setYandexSuggestions}
+        setSelected={setSelectedAddress}
+      />
+      <YandexMapWithZones
+        center={[27.518791325127733, 53.90891092143379]}
+        selectedGeocode={selectedGeocode}
       />
     </div>
   );
