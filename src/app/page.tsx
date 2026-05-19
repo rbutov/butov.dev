@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 const developerInfo = [
   { key: 'name', value: 'Ruslan Butov', special: 'underline' },
-  { key: 'location', value: 'San Jose, CA' },
+  { key: 'location', value: 'San Francisco Bay Area' },
   { key: 'position', value: 'Senior Software Engineer' },
   { key: 'github', value: 'https://github.com/rbutov', link: true },
   { key: 'linkedin', value: 'https://linkedin.com/in/rbutov', link: true },
