@@ -1,5 +1,5 @@
 import { firestore } from 'firebase-admin';
-import { Response, https, logger } from 'firebase-functions';
+import { https, logger } from 'firebase-functions';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 
 import { db } from './firebase';
@@ -24,7 +24,7 @@ interface SubscriberData {
  * It sends a request to the Telegram API to set the available commands for the bot.
  */
 export const updateTelegramBotCommands = https.onRequest(
-  async (_: https.Request, res: Response) => {
+  async (_, res) => {
     if (!TELEGRAM_BOT_TOKEN) {
       logger.error('Telegram bot token is not set');
       res.status(500).send('Telegram bot token is not set');
@@ -72,7 +72,7 @@ export const updateTelegramBotCommands = https.onRequest(
  * @param res - The response object to send back to the client
  */
 export const telegramWebhook = https.onRequest(
-  async (req: https.Request, res: Response) => {
+  async (req, res) => {
     try {
       const message = req.body.message;
 
